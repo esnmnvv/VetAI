@@ -526,6 +526,21 @@ textarea {
   color: var(--color-text-danger);
 }
 
+.find-vet-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  padding: 9px 13px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  background: #3b6d11;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .loading-bubble {
   width: 58px;
 }
@@ -635,6 +650,188 @@ textarea {
   border-top: 0.5px solid var(--color-border-tertiary);
 }
 
+.vet-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(18, 24, 15, 0.52);
+}
+
+.vet-modal {
+  position: relative;
+  width: min(90vw, 700px);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 18px;
+  box-shadow: 0 18px 48px rgba(18, 24, 15, 0.24);
+}
+
+.vet-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border: 0.5px solid #f0c5c0;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--color-text-danger);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.vet-diagnosis {
+  margin-right: 38px;
+  margin-bottom: 12px;
+  padding: 11px 14px;
+  border-radius: var(--border-radius-md);
+  background: #fff0ee;
+  border: 0.5px solid #f0c5c0;
+  color: var(--color-text-danger);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+  max-height: 96px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.vet-city-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.vet-city-form input {
+  min-width: 0;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 13px;
+}
+
+.vet-city-form input:focus {
+  outline: none;
+  border-color: #3b6d11;
+}
+
+.vet-city-form button,
+.vet-call {
+  border: none;
+  border-radius: var(--border-radius-md);
+  background: #3b6d11;
+  color: #ffffff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.vet-city-form button {
+  padding: 0 16px;
+}
+
+.vet-status,
+.vet-error {
+  margin-bottom: 10px;
+  border-radius: var(--border-radius-md);
+  padding: 9px 12px;
+  font-size: 12px;
+}
+
+.vet-status {
+  background: #eaf3de;
+  color: #3b6d11;
+}
+
+.vet-error {
+  background: #fff6f5;
+  color: var(--color-text-danger);
+  border: 0.5px solid #f0c5c0;
+}
+
+.vet-map {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background-tertiary);
+}
+
+.vet-list {
+  display: grid;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.vet-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background-secondary);
+}
+
+.vet-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.vet-card p {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.vet-rating {
+  color: #a86600;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.vet-call {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.vet-call.disabled {
+  background: #dfe6da;
+  color: var(--color-text-secondary);
+  cursor: default;
+}
+
+.vet-empty {
+  padding: 16px;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.55;
+  text-align: center;
+}
+
 @media (max-width: 900px) {
   .steps,
   .diseases {
@@ -702,5 +899,30 @@ textarea {
 
   .photo-remove {
     grid-column: 1 / -1;
+  }
+
+  .vet-modal-backdrop {
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .vet-modal {
+    width: 100%;
+    max-height: calc(100vh - 24px);
+    padding: 14px;
+  }
+
+  .vet-map {
+    height: 320px;
+  }
+
+  .vet-city-form,
+  .vet-card {
+    grid-template-columns: 1fr;
+  }
+
+  .vet-city-form button,
+  .vet-call {
+    min-height: 40px;
   }
 }

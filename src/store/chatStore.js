@@ -7,6 +7,8 @@ const welcomeMessage = {
   text: 'Опишите симптомы животного или прикрепите фото. Я помогу оценить вероятный диагноз и подскажу, что сделать сразу.',
 };
 
+const vetFinderPattern = /ветеринар|срочно|клиника/i;
+
 export const useChatStore = create((set, get) => ({
   selectedAnimal: 'корова',
   symptoms: '',
@@ -108,6 +110,7 @@ ${userText}${
             id: crypto.randomUUID(),
             role: 'assistant',
             text: answer,
+            showVetFinder: vetFinderPattern.test(answer),
           },
         ],
       }));

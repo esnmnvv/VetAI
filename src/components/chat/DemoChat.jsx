@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useChatStore } from '../../store/chatStore.js';
+import VetMap from '../VetMap.jsx';
 import AnimalSelector from './AnimalSelector.jsx';
 import ChatHistory from './ChatHistory.jsx';
 import ChatInput from './ChatInput.jsx';
@@ -6,6 +8,7 @@ import PhotoPreview from './PhotoPreview.jsx';
 import QuickSymptoms from './QuickSymptoms.jsx';
 
 export default function DemoChat() {
+  const [vetModalDiagnosis, setVetModalDiagnosis] = useState('');
   const isDragging = useChatStore((state) => state.isDragging);
   const setIsDragging = useChatStore((state) => state.setIsDragging);
   const selectPhoto = useChatStore((state) => state.selectPhoto);
@@ -40,12 +43,18 @@ export default function DemoChat() {
         onDrop={handleDrop}
       >
         <AnimalSelector />
-        <ChatHistory />
+        <ChatHistory onFindVet={setVetModalDiagnosis} />
         <QuickSymptoms />
         <PhotoPreview />
         <ChatInput />
         <div className="drop-hint">Можно перетащить JPEG/PNG фото прямо в этот блок.</div>
       </form>
+
+      <VetMap
+        isOpen={Boolean(vetModalDiagnosis)}
+        onClose={() => setVetModalDiagnosis('')}
+        diagnosis={vetModalDiagnosis}
+      />
     </section>
   );
 }

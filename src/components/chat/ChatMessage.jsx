@@ -1,4 +1,4 @@
-export default function ChatMessage({ message }) {
+export default function ChatMessage({ message, onFindVet }) {
   const isUser = message.role === 'user';
 
   return (
@@ -8,6 +8,11 @@ export default function ChatMessage({ message }) {
           <img className="chat-image" src={message.imagePreview} alt="Фото животного" />
         )}
         <div className="chat-text">{message.text}</div>
+        {message.showVetFinder && (
+          <button className="find-vet-btn" type="button" onClick={() => onFindVet?.(message.text)}>
+            📍 Найти ветеринара рядом
+          </button>
+        )}
       </div>
     </div>
   );
