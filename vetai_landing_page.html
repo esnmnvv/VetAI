@@ -1,0 +1,361 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700&family=Golos+Text:wght@400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .app {
+    font-family: 'Golos Text', sans-serif;
+    color: var(--color-text-primary);
+    background: var(--color-background-tertiary);
+    min-height: 100vh;
+  }
+
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .logo { font-family: 'Unbounded', sans-serif; font-size: 18px; font-weight: 700; color: #3B6D11; }
+  .logo span { color: var(--color-text-secondary); font-weight: 400; font-size: 13px; margin-left: 8px; font-family: 'Golos Text', sans-serif; }
+  .nav-cta {
+    background: #3B6D11; color: #fff; border: none; padding: 8px 20px;
+    border-radius: 20px; font-size: 14px; font-family: 'Golos Text', sans-serif;
+    cursor: pointer; font-weight: 500;
+  }
+
+  .hero {
+    text-align: center; padding: 4rem 2rem 3rem;
+    background: var(--color-background-primary);
+  }
+  .hero-badge {
+    display: inline-block; background: #EAF3DE; color: #3B6D11;
+    padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    margin-bottom: 1.5rem; border: 0.5px solid #C0DD97;
+  }
+  .hero h1 {
+    font-family: 'Unbounded', sans-serif; font-size: 32px; font-weight: 700;
+    line-height: 1.2; max-width: 560px; margin: 0 auto 1rem;
+    color: var(--color-text-primary);
+  }
+  .hero h1 em { color: #3B6D11; font-style: normal; }
+  .hero p {
+    font-size: 16px; color: var(--color-text-secondary); max-width: 480px;
+    margin: 0 auto 2rem; line-height: 1.7;
+  }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: #3B6D11; color: #fff; border: none; padding: 12px 28px;
+    border-radius: 28px; font-size: 15px; font-family: 'Golos Text', sans-serif;
+    cursor: pointer; font-weight: 500;
+  }
+  .btn-secondary {
+    background: transparent; color: var(--color-text-primary);
+    border: 0.5px solid var(--color-border-primary); padding: 12px 28px;
+    border-radius: 28px; font-size: 15px; font-family: 'Golos Text', sans-serif;
+    cursor: pointer; font-weight: 500;
+  }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--color-border-tertiary);
+    border-top: 0.5px solid var(--color-border-tertiary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .stat {
+    background: var(--color-background-primary);
+    padding: 1.5rem; text-align: center;
+  }
+  .stat-num { font-family: 'Unbounded', sans-serif; font-size: 26px; font-weight: 700; color: #3B6D11; }
+  .stat-label { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+
+  .section { padding: 3rem 2rem; }
+  .section-title {
+    font-family: 'Unbounded', sans-serif; font-size: 20px; font-weight: 700;
+    margin-bottom: 0.5rem; color: var(--color-text-primary);
+  }
+  .section-sub { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 2rem; }
+
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .step {
+    background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg); padding: 1.25rem;
+  }
+  .step-num {
+    width: 32px; height: 32px; background: #EAF3DE; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Unbounded', sans-serif; font-size: 13px; color: #3B6D11;
+    font-weight: 700; margin-bottom: 12px;
+  }
+  .step h3 { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+  .step p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+
+  .diseases { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 1rem; }
+  .disease-tag {
+    background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md); padding: 10px 12px;
+    font-size: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  .disease-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  .demo-section {
+    background: var(--color-background-primary);
+    border-top: 0.5px solid var(--color-border-tertiary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 3rem 2rem;
+  }
+  .demo-box {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg); padding: 1.5rem;
+    max-width: 600px; margin: 0 auto;
+  }
+  .symptom-input {
+    width: 100%; padding: 10px 14px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-primary);
+    font-family: 'Golos Text', sans-serif; font-size: 14px;
+    color: var(--color-text-primary); resize: vertical; min-height: 80px;
+    margin-bottom: 10px;
+  }
+  .symptom-input:focus { outline: none; border-color: #3B6D11; }
+
+  .animal-select {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .animal-btn {
+    padding: 6px 14px; border-radius: 20px; font-size: 13px;
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    cursor: pointer; font-family: 'Golos Text', sans-serif;
+    color: var(--color-text-primary);
+    transition: all 0.15s;
+  }
+  .animal-btn.active {
+    background: #3B6D11; color: #fff; border-color: #3B6D11;
+  }
+
+  .analyze-btn {
+    width: 100%; background: #3B6D11; color: #fff; border: none;
+    padding: 12px; border-radius: var(--border-radius-md);
+    font-size: 15px; font-family: 'Golos Text', sans-serif;
+    cursor: pointer; font-weight: 500;
+  }
+  .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .result-box {
+    margin-top: 1rem; background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md); padding: 1.25rem;
+  }
+  .result-header { font-weight: 500; font-size: 14px; margin-bottom: 10px; color: #3B6D11; }
+  .result-text { font-size: 14px; line-height: 1.7; color: var(--color-text-primary); white-space: pre-wrap; }
+
+  .loading-dots { display: flex; gap: 6px; align-items: center; padding: 8px 0; }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #3B6D11;
+    animation: bounce 0.8s infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.15s; }
+  .dot:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce { 0%,80%,100% { transform: scale(0.7); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+
+  .footer {
+    text-align: center; padding: 2rem;
+    font-size: 12px; color: var(--color-text-tertiary);
+    border-top: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .quick-symptoms { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .qs-btn {
+    padding: 4px 10px; border-radius: 12px; font-size: 11px;
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+    cursor: pointer; font-family: 'Golos Text', sans-serif;
+    color: var(--color-text-secondary);
+  }
+  .qs-btn:hover { border-color: #3B6D11; color: #3B6D11; }
+</style>
+
+<div class="app">
+  <nav class="nav">
+    <div class="logo">МалАИ <span>ветеринар в телефоне</span></div>
+    <button class="nav-cta" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Попробовать</button>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">Хакатон 2025 — Bishkek</div>
+    <h1>Ваш скот под защитой <em>искусственного интеллекта</em></h1>
+    <p>Опишите симптомы животного — AI определит болезнь и подскажет что делать. Без ветеринара, без поездок в город.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Попробовать бесплатно</button>
+      <button class="btn-secondary" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Как это работает</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">5M+</div><div class="stat-label">голов скота в КР</div></div>
+    <div class="stat"><div class="stat-num">30+</div><div class="stat-label">болезней в базе</div></div>
+    <div class="stat"><div class="stat-num">&lt;30с</div><div class="stat-label">время анализа</div></div>
+  </div>
+
+  <div class="section" id="how">
+    <div class="section-title">Как это работает</div>
+    <div class="section-sub">Три шага до диагноза</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Выберите животное</h3>
+        <p>Корова, лошадь, овца или другой скот</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Опишите симптомы</h3>
+        <p>Что заметили: не ест, хромает, вздутие, выделения</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Получите диагноз</h3>
+        <p>AI анализирует и даёт рекомендации что делать прямо сейчас</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Свяжитесь с ветом</h3>
+        <p>При серьёзных случаях — кнопка вызова ветеринара</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="background: var(--color-background-primary); border-top: 0.5px solid var(--color-border-tertiary); border-bottom: 0.5px solid var(--color-border-tertiary);">
+    <div class="section-title">Болезни в базе</div>
+    <div class="section-sub">AI обучен распознавать наиболее распространённые заболевания скота в ЦА</div>
+    <div class="diseases">
+      <div class="disease-tag"><div class="disease-dot" style="background:#E24B4A"></div>Ящур</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#BA7517"></div>Тимпания</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#E24B4A"></div>Бруцеллёз</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#378ADD"></div>Пневмония</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#BA7517"></div>Мастит</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#639922"></div>Чесотка</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#378ADD"></div>Конъюнктивит</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#E24B4A"></div>Сибирская язва</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#BA7517"></div>Колики</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#639922"></div>Дерматит</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#378ADD"></div>Диарея</div>
+      <div class="disease-tag"><div class="disease-dot" style="background:#639922"></div>+ ещё 20</div>
+    </div>
+  </div>
+
+  <div class="demo-section" id="demo">
+    <div style="text-align:center; margin-bottom: 1.5rem;">
+      <div class="section-title">Попробуйте прямо сейчас</div>
+      <div class="section-sub">Живое демо — реальный AI анализирует симптомы</div>
+    </div>
+    <div class="demo-box">
+      <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px;">Животное:</div>
+      <div class="animal-select" id="animalSelect">
+        <button class="animal-btn active" onclick="selectAnimal(this,'корова')">Корова</button>
+        <button class="animal-btn" onclick="selectAnimal(this,'лошадь')">Лошадь</button>
+        <button class="animal-btn" onclick="selectAnimal(this,'овца')">Овца</button>
+        <button class="animal-btn" onclick="selectAnimal(this,'коза')">Коза</button>
+      </div>
+
+      <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px;">Быстрые симптомы:</div>
+      <div class="quick-symptoms">
+        <button class="qs-btn" onclick="addSymptom('не ест')">не ест</button>
+        <button class="qs-btn" onclick="addSymptom('высокая температура')">высокая температура</button>
+        <button class="qs-btn" onclick="addSymptom('вздутие живота')">вздутие живота</button>
+        <button class="qs-btn" onclick="addSymptom('хромает')">хромает</button>
+        <button class="qs-btn" onclick="addSymptom('кашель')">кашель</button>
+        <button class="qs-btn" onclick="addSymptom('выделения из носа')">выделения из носа</button>
+        <button class="qs-btn" onclick="addSymptom('диарея')">диарея</button>
+        <button class="qs-btn" onclick="addSymptom('слезятся глаза')">слезятся глаза</button>
+      </div>
+
+      <textarea class="symptom-input" id="symptomsInput" placeholder="Опишите симптомы подробнее... Например: корова не ест 2 дня, нос сухой и горячий, стоит отдельно от стада"></textarea>
+
+      <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">Анализировать симптомы</button>
+
+      <div id="result" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    МалАИ — проект хакатона · Bishkek 2025 · Сделано с заботой о фермерах Кыргызстана
+  </div>
+</div>
+
+<script>
+  let selectedAnimal = 'корова';
+
+  function selectAnimal(btn, animal) {
+    document.querySelectorAll('.animal-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedAnimal = animal;
+  }
+
+  function addSymptom(text) {
+    const input = document.getElementById('symptomsInput');
+    if (input.value && !input.value.endsWith(' ')) input.value += ', ';
+    input.value += text;
+    input.focus();
+  }
+
+  async function analyze() {
+    const symptoms = document.getElementById('symptomsInput').value.trim();
+    if (!symptoms) { alert('Опишите симптомы животного'); return; }
+
+    const btn = document.getElementById('analyzeBtn');
+    const resultDiv = document.getElementById('result');
+
+    btn.disabled = true;
+    btn.textContent = 'Анализирую...';
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<div class="result-box"><div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: `Ты опытный ветеринар в Кыргызстане. Фермер описывает симптомы своего животного. 
+Дай краткий и практичный ответ на русском языке в формате:
+
+🔴 Вероятный диагноз: [название]
+📊 Уверенность: [высокая/средняя/низкая]
+
+⚠️ Что делать СЕЙЧАС:
+1. [действие]
+2. [действие]
+3. [действие]
+
+💊 Чем лечить: [препараты/методы доступные в сельской местности]
+
+🚨 Срочно к ветеринару если: [признаки ухудшения]
+
+Будь конкретным, практичным. Учти что фермер в отдалённом районе, доступ к ветеринару ограничен.`,
+          messages: [{ role: 'user', content: `Животное: ${selectedAnimal}\nСимптомы: ${symptoms}` }]
+        })
+      });
+
+      const data = await res.json();
+      const text = data.content?.[0]?.text || 'Не удалось получить ответ';
+
+      resultDiv.innerHTML = `<div class="result-box">
+        <div class="result-header">Результат анализа · ${selectedAnimal}</div>
+        <div class="result-text">${text}</div>
+        <div style="margin-top:1rem; padding-top:1rem; border-top: 0.5px solid var(--color-border-tertiary); font-size:12px; color: var(--color-text-secondary);">
+          Это AI-рекомендация. При серьёзных симптомах обратитесь к ветеринару.
+        </div>
+      </div>`;
+    } catch (e) {
+      resultDiv.innerHTML = `<div class="result-box"><div class="result-text" style="color: var(--color-text-danger)">Ошибка соединения. Проверьте интернет.</div></div>`;
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Анализировать симптомы';
+  }
+</script>

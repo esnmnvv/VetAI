@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #3b6d11;
+  --color-primary-dark: #2d530d;
+  --font-sans: 'Golos Text', ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: #ffffff;
+}
+
+button,
+textarea {
+  font: inherit;
+}
