@@ -10,6 +10,7 @@
     "react": "latest",
     "react-dom": "latest",
     "tailwindcss": "^4.2.4",
-    "vite": "latest"
+    "vite": "latest",
+    "zustand": "^5.0.13"
   }
 }
