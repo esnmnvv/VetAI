@@ -3,6 +3,7 @@ import { useChatStore } from '../../store/chatStore.js';
 import VetMap from '../VetMap.jsx';
 import AnimalSelector from './AnimalSelector.jsx';
 import ChatHistory from './ChatHistory.jsx';
+import ChatSessions from './ChatSessions.jsx';
 import ChatInput from './ChatInput.jsx';
 import PhotoPreview from './PhotoPreview.jsx';
 import QuickSymptoms from './QuickSymptoms.jsx';
@@ -42,6 +43,7 @@ export default function DemoChat() {
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
       >
+        <ChatSessions />
         <AnimalSelector />
         <ChatHistory onFindVet={setVetModalDiagnosis} />
         <QuickSymptoms />

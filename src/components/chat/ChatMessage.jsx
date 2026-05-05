@@ -7,6 +7,9 @@ export default function ChatMessage({ message, onFindVet }) {
         {message.imagePreview && (
           <img className="chat-image" src={message.imagePreview} alt="Фото животного" />
         )}
+        {!message.imagePreview && message.hasImage && (
+          <div className="chat-image-note">Фото было прикреплено к этому сообщению</div>
+        )}
         <div className="chat-text">{message.text}</div>
         {message.showVetFinder && (
           <button className="find-vet-btn" type="button" onClick={() => onFindVet?.(message.text)}>

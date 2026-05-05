@@ -3,6 +3,22 @@ export const animals = [
   { label: 'Лошадь', value: 'лошадь' },
   { label: 'Овца', value: 'овца' },
   { label: 'Коза', value: 'коза' },
+  { label: 'Бык', value: 'бык' },
+  { label: 'Теленок', value: 'теленок' },
+  { label: 'Жеребенок', value: 'жеребенок' },
+  { label: 'Ягненок', value: 'ягненок' },
+  { label: 'Козленок', value: 'козленок' },
+  { label: 'Свинья', value: 'свинья' },
+  { label: 'Поросенок', value: 'поросенок' },
+  { label: 'Осел', value: 'осел' },
+  { label: 'Верблюд', value: 'верблюд' },
+  { label: 'Як', value: 'як' },
+  { label: 'Кролик', value: 'кролик' },
+  { label: 'Курица', value: 'курица' },
+  { label: 'Индейка', value: 'индейка' },
+  { label: 'Утка', value: 'утка' },
+  { label: 'Гусь', value: 'гусь' },
+  { label: 'Собака', value: 'собака' },
 ];
 
 export const quickSymptoms = [
@@ -34,7 +50,7 @@ export const diseases = [
 export const steps = [
   {
     title: 'Выберите животное',
-    text: 'Корова, лошадь, овца или другой скот',
+    text: 'Крупный и мелкий скот, птица или домашнее животное',
   },
   {
     title: 'Опишите симптомы',
