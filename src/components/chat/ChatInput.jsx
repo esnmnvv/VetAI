@@ -48,7 +48,7 @@ export default function ChatInput() {
         type="button"
         onClick={submit}
       >
-        {isLoading ? 'Ждём...' : 'Отправить'}
+        {isLoading ? 'Анализ...' : 'Отправить'}
       </button>
     </div>
   );

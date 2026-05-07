@@ -13,7 +13,7 @@
   --color-border-tertiary: #e1e7dc;
   --border-radius-md: 10px;
   --border-radius-lg: 14px;
-  --page-width: 1150px;
+  --page-width: 1280px;
   --content-width: 920px;
   --content-width-narrow: 620px;
 }
@@ -132,8 +132,23 @@ textarea {
   font-size: 14px;
   color: var(--color-text-secondary);
   max-width: 450px;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 0.8rem;
   line-height: 1.6;
+}
+
+.hero-warning {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 480px;
+  margin: 0 auto 1.5rem;
+  padding: 7px 12px;
+  border: 0.5px solid #d9c88f;
+  border-radius: var(--border-radius-md);
+  background: #fff8df;
+  color: #7a5a08;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .hero-btns {
@@ -282,6 +297,25 @@ textarea {
   display: flex;
   align-items: center;
   gap: 6px;
+  min-height: 38px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: 12px;
+  text-align: left;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.disease-tag:hover,
+.disease-tag.active {
+  border-color: #3b6d11;
+  background: #f3f8ea;
+}
+
+.disease-tag.active {
+  transform: translateY(-1px);
 }
 
 .disease-dot {
@@ -289,6 +323,54 @@ textarea {
   height: 6px;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+.disease-details {
+  margin-top: 12px;
+  padding: 14px;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  background: var(--color-background-secondary);
+}
+
+.disease-details-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.disease-details h3 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.disease-details p,
+.disease-details li {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.disease-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.disease-detail-grid h4 {
+  margin-bottom: 6px;
+  color: var(--color-text-primary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.disease-detail-grid ul {
+  margin: 0;
+  padding-left: 17px;
 }
 
 .demo-section {
@@ -338,9 +420,11 @@ textarea {
 }
 
 .chat-input {
-  min-height: 46px;
-  max-height: 120px;
+  min-height: 78px;
+  max-height: 160px;
   margin-bottom: 0;
+  border-color: #b8cf9a;
+  box-shadow: 0 0 0 3px rgba(59, 109, 17, 0.06);
 }
 
 .symptom-input:focus {
@@ -428,6 +512,16 @@ textarea {
   color: var(--color-text-danger);
 }
 
+.loading-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #3b6d11;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .loading-dots {
   display: flex;
   gap: 6px;
@@ -507,16 +601,21 @@ textarea {
 }
 
 .chat-session-list {
-  display: flex;
+  display: grid;
+  grid-auto-columns: minmax(180px, 230px);
+  grid-auto-flow: column;
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 2px;
+  overscroll-behavior-x: contain;
+  padding: 2px 12px 8px 2px;
+  scroll-padding-right: 12px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .chat-session-item {
   display: grid;
-  grid-template-columns: minmax(150px, 220px) 30px;
-  flex: 0 0 auto;
+  grid-template-columns: minmax(0, 1fr) 30px;
+  min-width: 0;
   overflow: hidden;
   border: 0.5px solid var(--color-border-tertiary);
   border-radius: var(--border-radius-md);
@@ -647,7 +746,8 @@ textarea {
 }
 
 .loading-bubble {
-  width: 58px;
+  width: auto;
+  max-width: 260px;
 }
 
 .chat-image {
@@ -951,6 +1051,10 @@ textarea {
   .diseases {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .disease-detail-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1005,6 +1109,10 @@ textarea {
   .upload-btn,
   .send-btn {
     min-height: 42px;
+  }
+
+  .chat-input {
+    min-height: 96px;
   }
 
   .photo-preview {

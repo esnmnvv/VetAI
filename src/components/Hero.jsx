@@ -11,6 +11,9 @@ export default function Hero() {
         Опишите симптомы животного — AI определит болезнь и подскажет что делать.
         Без ветеринара, без поездок в город.
       </p>
+      <div className="hero-warning">
+        AI не заменяет ветеринара, но помогает быстро оценить ситуацию
+      </div>
       <div className="hero-btns">
         <button className="btn-primary" onClick={() => scrollToSection('demo')}>
           Попробовать бесплатно
