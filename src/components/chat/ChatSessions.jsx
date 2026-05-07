@@ -1,9 +1,10 @@
+import { useI18n } from '../../i18n/useI18n.js';
 import { useChatStore } from '../../store/chatStore.js';
 
-const formatSessionTime = (value) => {
+const formatSessionTime = (value, language) => {
   if (!value) return '';
 
-  return new Intl.DateTimeFormat('ru-RU', {
+  return new Intl.DateTimeFormat(language === 'ky' ? 'ky-KG' : 'ru-RU', {
     day: '2-digit',
     month: '2-digit',
     hour: '2-digit',
@@ -12,6 +13,7 @@ const formatSessionTime = (value) => {
 };
 
 export default function ChatSessions() {
+  const { language, t } = useI18n();
   const sessions = useChatStore((state) => state.sessions);
   const activeSessionId = useChatStore((state) => state.activeSessionId);
   const isLoading = useChatStore((state) => state.isLoading);
@@ -23,9 +25,9 @@ export default function ChatSessions() {
     <div className="chat-sessions">
       <div className="chat-sessions-head">
         <div>
-          <div className="field-label">История чатов:</div>
+          <div className="field-label">{t.chatHistoryLabel}</div>
           <div className="chat-sessions-count">
-            {sessions.length ? `${sessions.length} сохранено` : 'пока пусто'}
+            {sessions.length ? t.savedCount(sessions.length) : t.emptySessions}
           </div>
         </div>
         <button
@@ -34,7 +36,7 @@ export default function ChatSessions() {
           disabled={isLoading}
           onClick={startNewChat}
         >
-          Новый чат
+          {t.newChat}
         </button>
       </div>
 
@@ -52,12 +54,12 @@ export default function ChatSessions() {
                 onClick={() => loadSession(session.id)}
               >
                 <span className="chat-session-title">{session.title}</span>
-                <span className="chat-session-meta">{formatSessionTime(session.updatedAt)}</span>
+                <span className="chat-session-meta">{formatSessionTime(session.updatedAt, language)}</span>
               </button>
               <button
                 type="button"
                 className="chat-session-delete"
-                aria-label="Удалить чат"
+                aria-label={t.deleteChat}
                 disabled={isLoading}
                 onClick={() => deleteSession(session.id)}
               >

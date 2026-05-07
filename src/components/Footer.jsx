@@ -1,7 +1,7 @@
+import { useI18n } from '../i18n/useI18n.js';
+
 export default function Footer() {
-  return (
-    <footer className="footer">
-      МалАИ — проект хакатона · Bishkek 2025 · Сделано с заботой о фермерах Кыргызстана
-    </footer>
-  );
+  const { t } = useI18n();
+
+  return <footer className="footer">{t.footer}</footer>;
 }

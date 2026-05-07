@@ -1,46 +1,46 @@
 import { useState } from 'react';
-import { diseases } from '../data/siteData.js';
+import { diseases, localize } from '../data/siteData.js';
+import { useI18n } from '../i18n/useI18n.js';
 
 export default function DiseasesSection() {
   const [activeDisease, setActiveDisease] = useState(diseases[4] || diseases[0]);
+  const { language, t } = useI18n();
 
   return (
     <section className="section diseases-section">
-      <h2 className="section-title">Болезни в базе</h2>
-      <p className="section-sub">
-        AI обучен распознавать наиболее распространённые заболевания скота в ЦА
-      </p>
+      <h2 className="section-title">{t.diseasesTitle}</h2>
+      <p className="section-sub">{t.diseasesSubtitle}</p>
       <div className="diseases">
         {diseases.map((disease) => (
           <button
-            className={`disease-tag ${activeDisease.name === disease.name ? 'active' : ''}`}
-            key={disease.name}
+            className={`disease-tag ${localize(activeDisease.name, 'ru') === localize(disease.name, 'ru') ? 'active' : ''}`}
+            key={localize(disease.name, 'ru')}
             type="button"
             onClick={() => setActiveDisease(disease)}
           >
             <span className="disease-dot" style={{ background: disease.color }} />
-            {disease.name}
+            {localize(disease.name, language)}
           </button>
         ))}
       </div>
       <article className="disease-details">
         <div className="disease-details-head">
           <span className="disease-dot" style={{ background: activeDisease.color }} />
-          <h3>{activeDisease.name}</h3>
+          <h3>{localize(activeDisease.name, language)}</h3>
         </div>
-        <p>{activeDisease.description}</p>
+        <p>{localize(activeDisease.description, language)}</p>
         <div className="disease-detail-grid">
           <div>
-            <h4>Симптомы</h4>
+            <h4>{t.symptoms}</h4>
             <ul>
-              {activeDisease.symptoms.map((symptom) => (
+              {localize(activeDisease.symptoms, language).map((symptom) => (
                 <li key={symptom}>{symptom}</li>
               ))}
             </ul>
           </div>
           <div>
-            <h4>Профилактика</h4>
-            <p>{activeDisease.prevention}</p>
+            <h4>{t.prevention}</h4>
+            <p>{localize(activeDisease.prevention, language)}</p>
           </div>
         </div>
       </article>

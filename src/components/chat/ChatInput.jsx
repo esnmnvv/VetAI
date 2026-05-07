@@ -1,8 +1,10 @@
 import { useRef } from 'react';
+import { useI18n } from '../../i18n/useI18n.js';
 import { useChatStore } from '../../store/chatStore.js';
 
 export default function ChatInput() {
   const fileInputRef = useRef(null);
+  const { t } = useI18n();
   const symptoms = useChatStore((state) => state.symptoms);
   const isLoading = useChatStore((state) => state.isLoading);
   const setSymptoms = useChatStore((state) => state.setSymptoms);
@@ -21,7 +23,7 @@ export default function ChatInput() {
         className="upload-btn"
         onClick={() => fileInputRef.current?.click()}
       >
-        Фото
+        {t.uploadPhoto}
       </button>
       <input
         ref={fileInputRef}
@@ -32,7 +34,7 @@ export default function ChatInput() {
       />
       <textarea
         className="symptom-input chat-input"
-        placeholder="Опишите симптомы... Например: корова не ест 2 дня, нос сухой и горячий"
+        placeholder={t.inputPlaceholder}
         value={symptoms}
         onChange={(event) => setSymptoms(event.target.value)}
         onKeyDown={(event) => {
@@ -48,7 +50,7 @@ export default function ChatInput() {
         type="button"
         onClick={submit}
       >
-        {isLoading ? 'Анализ...' : 'Отправить'}
+        {isLoading ? t.analyzing : t.send}
       </button>
     </div>
   );

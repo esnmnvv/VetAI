@@ -1,13 +1,17 @@
+import { getTranslation } from './i18n/translations.js';
+
 const MAX_IMAGE_SIDE = 1280;
 const IMAGE_QUALITY = 0.82;
 
-export async function askGroq(messages) {
+export async function askGroq(messages, language = 'ru') {
+  const t = getTranslation(language);
   const response = await fetch('/api/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
+      language,
       messages,
     }),
   });
@@ -15,13 +19,15 @@ export async function askGroq(messages) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || 'Не удалось получить ответ от AI.');
+    throw new Error(data.error || t.aiRequestError);
   }
 
-  return data.content || 'AI не вернул текстовый ответ.';
+  return data.content || t.aiNoText;
 }
 
-export function imageFileToDataUrl(file) {
+export function imageFileToDataUrl(file, language = 'ru') {
+  const t = getTranslation(language);
+
   return new Promise((resolve, reject) => {
     const image = new Image();
     const objectUrl = URL.createObjectURL(file);
@@ -36,7 +42,7 @@ export function imageFileToDataUrl(file) {
 
       const context = canvas.getContext('2d');
       if (!context) {
-        reject(new Error('Не удалось подготовить фото для анализа.'));
+        reject(new Error(t.imagePrepareError));
         return;
       }
 
@@ -46,7 +52,7 @@ export function imageFileToDataUrl(file) {
 
     image.onerror = () => {
       URL.revokeObjectURL(objectUrl);
-      reject(new Error('Не удалось прочитать фото. Попробуйте другой JPEG/PNG файл.'));
+      reject(new Error(t.imageReadError));
     };
 
     image.src = objectUrl;

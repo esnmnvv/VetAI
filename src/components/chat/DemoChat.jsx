@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useI18n } from '../../i18n/useI18n.js';
 import { useChatStore } from '../../store/chatStore.js';
 import VetMap from '../VetMap.jsx';
 import AnimalSelector from './AnimalSelector.jsx';
@@ -10,6 +11,7 @@ import QuickSymptoms from './QuickSymptoms.jsx';
 
 export default function DemoChat() {
   const [vetModalDiagnosis, setVetModalDiagnosis] = useState('');
+  const { t } = useI18n();
   const isDragging = useChatStore((state) => state.isDragging);
   const setIsDragging = useChatStore((state) => state.setIsDragging);
   const selectPhoto = useChatStore((state) => state.selectPhoto);
@@ -29,8 +31,8 @@ export default function DemoChat() {
   return (
     <section className="demo-section" id="demo">
       <div className="demo-heading">
-        <h2 className="section-title">Попробуйте прямо сейчас</h2>
-        <p className="section-sub">Живое демо — реальный AI анализирует симптомы</p>
+        <h2 className="section-title">{t.demoTitle}</h2>
+        <p className="section-sub">{t.demoSubtitle}</p>
       </div>
 
       <form
@@ -49,7 +51,7 @@ export default function DemoChat() {
         <QuickSymptoms />
         <PhotoPreview />
         <ChatInput />
-        <div className="drop-hint">Можно перетащить JPEG/PNG фото прямо в этот блок.</div>
+        <div className="drop-hint">{t.dropHint}</div>
       </form>
 
       <VetMap

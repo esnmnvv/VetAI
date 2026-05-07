@@ -1,15 +1,25 @@
 import { create } from 'zustand';
 import { askGroq, imageFileToDataUrl } from '../api.js';
+import { animals, localize } from '../data/siteData.js';
+import { DEFAULT_LANGUAGE, getTranslation } from '../i18n/translations.js';
 
 const CHAT_SESSIONS_KEY = 'vetai-chat-sessions';
+const LANGUAGE_KEY = 'vetai-language';
 
-const welcomeMessage = {
+const createWelcomeMessage = (language) => ({
   id: 'welcome',
   role: 'assistant',
-  text: 'Опишите симптомы животного или прикрепите фото. Я помогу оценить вероятный диагноз и подскажу, что сделать сразу.',
-};
+  text: getTranslation(language).welcome,
+});
 
-const vetFinderPattern = /ветеринар|срочно|клиника/i;
+const readStoredLanguage = () => {
+  try {
+    const language = localStorage.getItem(LANGUAGE_KEY);
+    return language === 'ky' || language === 'ru' ? language : DEFAULT_LANGUAGE;
+  } catch {
+    return DEFAULT_LANGUAGE;
+  }
+};
 
 const createSessionId = () => crypto.randomUUID();
 
@@ -39,16 +49,23 @@ const writeStoredSessions = (sessions) => {
   );
 };
 
-const createTitle = (text, animal) => {
+const createTitle = (text, animal, language) => {
+  const t = getTranslation(language);
   const normalized = text.replace(/\s+/g, ' ').trim();
   const shortText = normalized.length > 34 ? `${normalized.slice(0, 34)}...` : normalized;
-  return `${animal}: ${shortText || 'новый анализ'}`;
+  return `${animal}: ${shortText || t.newAnalysis}`;
 };
 
+const getAnimalLabel = (value, language) =>
+  localize(animals.find((animal) => animal.value === value)?.label, language) || value;
+
+const initialLanguage = readStoredLanguage();
+
 export const useChatStore = create((set, get) => ({
-  selectedAnimal: 'корова',
+  language: initialLanguage,
+  selectedAnimal: getTranslation(initialLanguage).defaultAnimal,
   symptoms: '',
-  messages: [welcomeMessage],
+  messages: [createWelcomeMessage(initialLanguage)],
   apiMessages: [],
   sessions: readStoredSessions(),
   activeSessionId: null,
@@ -57,6 +74,20 @@ export const useChatStore = create((set, get) => ({
   isDragging: false,
   isLoading: false,
 
+  setLanguage: (language) => {
+    const nextLanguage = language === 'ky' ? 'ky' : 'ru';
+    localStorage.setItem(LANGUAGE_KEY, nextLanguage);
+
+    set((state) => {
+      const hasOnlyWelcome = state.messages.length === 1 && state.messages[0]?.id === 'welcome';
+
+      return {
+        language: nextLanguage,
+        messages: hasOnlyWelcome ? [createWelcomeMessage(nextLanguage)] : state.messages,
+      };
+    });
+  },
+
   setSelectedAnimal: (selectedAnimal) => {
     set({ selectedAnimal });
   },
@@ -64,13 +95,13 @@ export const useChatStore = create((set, get) => ({
   setIsDragging: (isDragging) => set({ isDragging }),
 
   startNewChat: () => {
-    const { photoPreview } = get();
+    const { photoPreview, language } = get();
     if (photoPreview) URL.revokeObjectURL(photoPreview);
 
     set({
-      selectedAnimal: 'корова',
+      selectedAnimal: getTranslation(language).defaultAnimal,
       symptoms: '',
-      messages: [welcomeMessage],
+      messages: [createWelcomeMessage(language)],
       apiMessages: [],
       activeSessionId: null,
       photo: null,
@@ -87,9 +118,9 @@ export const useChatStore = create((set, get) => ({
     if (photoPreview) URL.revokeObjectURL(photoPreview);
 
     set({
-      selectedAnimal: session.selectedAnimal || 'корова',
+      selectedAnimal: session.selectedAnimal || getTranslation(get().language).defaultAnimal,
       symptoms: '',
-      messages: session.messages?.length ? session.messages : [welcomeMessage],
+      messages: session.messages?.length ? session.messages : [createWelcomeMessage(get().language)],
       apiMessages: session.apiMessages || [],
       activeSessionId: session.id,
       photo: null,
@@ -103,11 +134,12 @@ export const useChatStore = create((set, get) => ({
     writeStoredSessions(nextSessions);
 
     if (get().activeSessionId === sessionId) {
+      const { language } = get();
       set({
         sessions: nextSessions,
-        selectedAnimal: 'корова',
+        selectedAnimal: getTranslation(language).defaultAnimal,
         symptoms: '',
-        messages: [welcomeMessage],
+        messages: [createWelcomeMessage(language)],
         apiMessages: [],
         activeSessionId: null,
         photo: null,
@@ -127,10 +159,11 @@ export const useChatStore = create((set, get) => ({
     })),
 
   selectPhoto: (file) => {
+    const t = getTranslation(get().language);
     if (!file) return;
 
     if (!['image/jpeg', 'image/png'].includes(file.type)) {
-      alert('Загрузите фото в формате JPEG или PNG.');
+      alert(t.photoFormatAlert);
       return;
     }
 
@@ -154,14 +187,15 @@ export const useChatStore = create((set, get) => ({
   },
 
   sendMessage: async () => {
-    const { symptoms, photo, photoPreview, selectedAnimal, apiMessages } = get();
+    const { symptoms, photo, photoPreview, selectedAnimal, apiMessages, language } = get();
+    const t = getTranslation(language);
 
     if (!symptoms.trim() && !photo) {
-      alert('Опишите симптомы животного или прикрепите фото');
+      alert(t.emptyMessageAlert);
       return false;
     }
 
-    const userText = symptoms.trim() || 'Проанализируй фото животного.';
+    const userText = symptoms.trim() || t.photoOnlyMessage;
     const userMessage = {
       id: crypto.randomUUID(),
       role: 'user',
@@ -182,9 +216,10 @@ export const useChatStore = create((set, get) => ({
     }));
 
     try {
-      const textContent = `Животное: ${selectedAnimal}
+      const animalLabel = getAnimalLabel(selectedAnimal, language);
+      const textContent = `${t.animalPromptLabel}: ${animalLabel}
 ${userText}`;
-      const imageDataUrl = photo ? await imageFileToDataUrl(photo) : null;
+      const imageDataUrl = photo ? await imageFileToDataUrl(photo, language) : null;
       const content = imageDataUrl
         ? [
             {
@@ -207,7 +242,7 @@ ${userText}`;
           content,
         },
       ];
-      const answer = await askGroq(nextApiMessages);
+      const answer = await askGroq(nextApiMessages, language);
       const assistantApiMessage = {
         role: 'assistant',
         content: answer,
@@ -216,7 +251,7 @@ ${userText}`;
         id: crypto.randomUUID(),
         role: 'assistant',
         text: answer,
-        showVetFinder: vetFinderPattern.test(answer),
+        showVetFinder: t.vetPattern.test(answer),
       };
 
       set((state) => ({
@@ -234,8 +269,9 @@ ${userText}`;
       const current = get();
       const savedSession = {
         id: sessionId,
-        title: createTitle(userText, selectedAnimal),
+        title: createTitle(userText, animalLabel, language),
         selectedAnimal,
+        language,
         messages: current.messages,
         apiMessages: current.apiMessages,
         updatedAt: new Date().toISOString(),
@@ -250,7 +286,7 @@ ${userText}`;
       const errorMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
-        text: error.message || 'Ошибка соединения. Проверьте интернет.',
+        text: error.message || t.connectionError,
         isError: true,
       };
 
@@ -261,8 +297,9 @@ ${userText}`;
       const current = get();
       const savedSession = {
         id: sessionId,
-        title: createTitle(userText, selectedAnimal),
+        title: createTitle(userText, getAnimalLabel(selectedAnimal, language), language),
         selectedAnimal,
+        language,
         messages: current.messages,
         apiMessages: current.apiMessages,
         updatedAt: new Date().toISOString(),

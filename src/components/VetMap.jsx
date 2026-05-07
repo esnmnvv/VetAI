@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useI18n } from '../i18n/useI18n.js';
 
 const GOOGLE_MAPS_SCRIPT_ID = 'google-maps-places-sdk';
 const HOTLINE_PHONE = '0800 XXX XXX';
 
-function loadGoogleMaps() {
+function loadGoogleMaps(t) {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   if (!apiKey) {
-    return Promise.reject(new Error('Не указан VITE_GOOGLE_MAPS_API_KEY.'));
+    return Promise.reject(new Error(t.mapKeyMissing));
   }
 
   if (window.google?.maps?.places) {
@@ -18,7 +19,7 @@ function loadGoogleMaps() {
   if (existingScript) {
     return new Promise((resolve, reject) => {
       existingScript.addEventListener('load', () => resolve(window.google), { once: true });
-      existingScript.addEventListener('error', () => reject(new Error('Не удалось загрузить Google Maps.')), {
+      existingScript.addEventListener('error', () => reject(new Error(t.mapLoadError)), {
         once: true,
       });
     });
@@ -31,13 +32,13 @@ function loadGoogleMaps() {
     script.async = true;
     script.defer = true;
     script.onload = () => resolve(window.google);
-    script.onerror = () => reject(new Error('Не удалось загрузить Google Maps.'));
+    script.onerror = () => reject(new Error(t.mapLoadError));
     document.head.appendChild(script);
   });
 }
 
-function getRatingStars(rating) {
-  if (!rating) return 'Рейтинг не указан';
+function getRatingStars(rating, t) {
+  if (!rating) return t.ratingMissing;
 
   const filledStars = Math.round(rating);
   return `${'★'.repeat(filledStars)}${'☆'.repeat(Math.max(0, 5 - filledStars))} ${rating.toFixed(1)}`;
@@ -55,6 +56,7 @@ function getMarkerIcon(color) {
 }
 
 export default function VetMap({ isOpen, onClose, diagnosis }) {
+  const { t } = useI18n();
   const mapRef = useRef(null);
   const googleRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -124,7 +126,7 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
     (location) => {
       if (!googleRef.current || !mapRef.current) return;
 
-      setStatus('Ищем ветеринаров рядом...');
+      setStatus(t.searchingVets);
       setError('');
       setVets([]);
       setHasSearched(false);
@@ -141,7 +143,7 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
       mapInstanceRef.current = map;
       map.setCenter(location);
       map.setZoom(13);
-      addMarker(location, 'Вы здесь', '#2f80ed');
+      addMarker(location, t.youAreHere, '#2f80ed');
 
       const request = {
         location,
@@ -171,7 +173,7 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
           return {
             place_id: place.place_id,
             name: place.name,
-            address: place.vicinity || place.formatted_address || 'Адрес не указан',
+            address: place.vicinity || place.formatted_address || t.addressMissing,
             rating: place.rating,
           };
         });
@@ -183,7 +185,7 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
         loadPlaceDetails(places);
       });
     },
-    [addMarker, clearMarkers, loadPlaceDetails],
+    [addMarker, clearMarkers, loadPlaceDetails, t],
   );
 
   const requestGeolocation = useCallback(() => {
@@ -193,7 +195,7 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
       return;
     }
 
-    setStatus('Запрашиваем геолокацию...');
+    setStatus(t.geoRequest);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setShowCitySearch(false);
@@ -205,23 +207,23 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
       () => {
         setShowCitySearch(true);
         setStatus('');
-        setError('Геолокация недоступна. Введите город или район вручную.');
+        setError(t.geoUnavailable);
       },
     );
-  }, [searchNearby]);
+  }, [searchNearby, t]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
 
     let isMounted = true;
 
-    setStatus('Загружаем карту...');
+    setStatus(t.mapLoading);
     setError('');
     setVets([]);
     setHasSearched(false);
     setShowCitySearch(false);
 
-    loadGoogleMaps()
+    loadGoogleMaps(t)
       .then((google) => {
         if (!isMounted) return;
         googleRef.current = google;
@@ -237,21 +239,21 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
     return () => {
       isMounted = false;
     };
-  }, [isOpen, requestGeolocation]);
+  }, [isOpen, requestGeolocation, t]);
 
   const handleCitySearch = (event) => {
     event.preventDefault();
 
     if (!city.trim() || !googleRef.current) return;
 
-    setStatus('Ищем район на карте...');
+    setStatus(t.districtSearch);
     setError('');
 
     const geocoder = new googleRef.current.maps.Geocoder();
     geocoder.geocode({ address: city.trim() }, (results, geocodeStatus) => {
       if (geocodeStatus !== googleRef.current.maps.GeocoderStatus.OK || !results?.[0]) {
         setStatus('');
-        setError('Не удалось найти этот город или район. Попробуйте уточнить запрос.');
+        setError(t.districtNotFound);
         return;
       }
 
@@ -263,12 +265,12 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
 
   return (
     <div className="vet-modal-backdrop" role="presentation" onClick={onClose}>
-      <div className="vet-modal" role="dialog" aria-modal="true" aria-label="Найти ветеринара рядом" onClick={(event) => event.stopPropagation()}>
-        <button className="vet-modal-close" type="button" aria-label="Закрыть" onClick={onClose}>
+      <div className="vet-modal" role="dialog" aria-modal="true" aria-label={t.vetDialog} onClick={(event) => event.stopPropagation()}>
+        <button className="vet-modal-close" type="button" aria-label={t.close} onClick={onClose}>
           ×
         </button>
 
-        <div className="vet-diagnosis">🔴 Диагноз: {diagnosis || 'требуется консультация ветеринара'}</div>
+        <div className="vet-diagnosis">🔴 {t.diagnosis}: {diagnosis || t.consultationNeeded}</div>
 
         {showCitySearch && (
           <form className="vet-city-form" onSubmit={handleCitySearch}>
@@ -276,10 +278,10 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
               type="text"
               value={city}
               onChange={(event) => setCity(event.target.value)}
-              placeholder="Введите ваш город или район"
-              aria-label="Введите ваш город или район"
+              placeholder={t.cityPlaceholder}
+              aria-label={t.cityPlaceholder}
             />
-            <button type="submit">Искать</button>
+            <button type="submit">{t.search}</button>
           </form>
         )}
 
@@ -295,14 +297,14 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
                 <div>
                   <h3>{vet.name}</h3>
                   <p>{vet.address}</p>
-                  <div className="vet-rating">{getRatingStars(vet.rating)}</div>
+                  <div className="vet-rating">{getRatingStars(vet.rating, t)}</div>
                 </div>
                 {vet.phone ? (
                   <a className="vet-call" href={`tel:${vet.phone.replaceAll(' ', '')}`}>
-                    Позвонить
+                    {t.call}
                   </a>
                 ) : (
-          <span className="vet-call disabled">Нет телефона</span>
+          <span className="vet-call disabled">{t.noPhone}</span>
                 )}
               </article>
             ))
@@ -310,9 +312,9 @@ export default function VetMap({ isOpen, onClose, diagnosis }) {
             hasSearched &&
             !status && (
               <div className="vet-empty">
-                Ветеринаров рядом не найдено.
+                {t.noVets}
                 <br />
-                Позвоните на горячую линию: {HOTLINE_PHONE}
+                {t.hotline}: {HOTLINE_PHONE}
               </div>
             )
           )}

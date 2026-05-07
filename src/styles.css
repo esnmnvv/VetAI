@@ -76,6 +76,38 @@ textarea {
   margin-left: 8px;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.language-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 34px);
+  gap: 2px;
+  padding: 2px;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: 20px;
+  background: var(--color-background-secondary);
+}
+
+.language-switch button {
+  min-height: 28px;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.language-switch button.active {
+  background: #3b6d11;
+  color: #fff;
+}
+
 .nav-cta,
 .btn-primary,
 .btn-secondary,
@@ -1075,6 +1107,10 @@ textarea {
     display: block;
     margin-left: 0;
     margin-top: 2px;
+  }
+
+  .nav-actions {
+    gap: 8px;
   }
 
   .hero {

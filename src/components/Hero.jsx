@@ -1,25 +1,25 @@
 import { scrollToSection } from '../utils/scroll.js';
+import { useI18n } from '../i18n/useI18n.js';
 
 export default function Hero() {
+  const { t } = useI18n();
+
   return (
     <section className="hero">
-      <div className="hero-badge">Хакатон 2025 — Bishkek</div>
+      <div className="hero-badge">{t.heroBadge}</div>
       <h1>
-        Ваш скот под защитой <em>искусственного интеллекта</em>
+        {t.heroTitle} <em>{t.heroTitleAccent}</em>
       </h1>
-      <p>
-        Опишите симптомы животного — AI определит болезнь и подскажет что делать.
-        Без ветеринара, без поездок в город.
-      </p>
+      <p>{t.heroText}</p>
       <div className="hero-warning">
-        AI не заменяет ветеринара, но помогает быстро оценить ситуацию
+        {t.heroWarning}
       </div>
       <div className="hero-btns">
         <button className="btn-primary" onClick={() => scrollToSection('demo')}>
-          Попробовать бесплатно
+          {t.tryFree}
         </button>
         <button className="btn-secondary" onClick={() => scrollToSection('how')}>
-          Как это работает
+          {t.howItWorks}
         </button>
       </div>
     </section>
