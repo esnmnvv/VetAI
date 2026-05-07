@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { askGroq, imageFileToDataUrl } from '../api.js';
 import { animals, localize } from '../data/siteData.js';
 import { DEFAULT_LANGUAGE, getTranslation } from '../i18n/translations.js';
+import { detectUrgency } from '../utils/urgency.js';
 
 const CHAT_SESSIONS_KEY = 'vetai-chat-sessions';
 const LANGUAGE_KEY = 'vetai-language';
@@ -251,6 +252,7 @@ ${userText}`;
         id: crypto.randomUUID(),
         role: 'assistant',
         text: answer,
+        urgency: detectUrgency(answer),
         showVetFinder: t.vetPattern.test(answer),
       };
 
