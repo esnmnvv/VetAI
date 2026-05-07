@@ -16,10 +16,17 @@ export async function askGroq(messages, language = 'ru') {
     }),
   });
 
-  const data = await response.json();
+  const rawBody = await response.text();
+  let data = {};
+
+  try {
+    data = rawBody ? JSON.parse(rawBody) : {};
+  } catch {
+    data = {};
+  }
 
   if (!response.ok) {
-    throw new Error(data.error || t.aiRequestError);
+    throw new Error(data.error || rawBody || t.aiRequestError);
   }
 
   return data.content || t.aiNoText;
