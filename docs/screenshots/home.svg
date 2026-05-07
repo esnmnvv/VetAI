@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Главный экран МалАИ</title>
+  <desc id="desc">Первый экран лендинга с названием проекта, описанием и кнопкой запуска демо.</desc>
+  <rect width="1280" height="720" fill="#f7faf4"/>
+  <rect x="72" y="48" width="1136" height="624" rx="18" fill="#ffffff" stroke="#dfe8d6"/>
+  <text x="112" y="102" fill="#26351e" font-family="Arial, sans-serif" font-size="34" font-weight="700">МалАИ</text>
+  <text x="216" y="102" fill="#6b765f" font-family="Arial, sans-serif" font-size="18">ветеринар в телефоне</text>
+  <rect x="1022" y="70" width="126" height="42" rx="8" fill="#3b6d11"/>
+  <text x="1050" y="97" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="700">Попробовать</text>
+  <rect x="112" y="162" width="188" height="34" rx="17" fill="#eef7e7"/>
+  <text x="132" y="184" fill="#3b6d11" font-family="Arial, sans-serif" font-size="15" font-weight="700">Хакатон 2025 — Bishkek</text>
+  <text x="112" y="264" fill="#17210f" font-family="Arial, sans-serif" font-size="64" font-weight="700">Ваш скот под защитой</text>
+  <text x="112" y="338" fill="#3b6d11" font-family="Arial, sans-serif" font-size="64" font-style="italic" font-weight="700">искусственного интеллекта</text>
+  <text x="112" y="404" fill="#596350" font-family="Arial, sans-serif" font-size="22">AI оценивает симптомы животного, подсказывает первые действия</text>
+  <text x="112" y="438" fill="#596350" font-family="Arial, sans-serif" font-size="22">и помогает понять, когда срочно нужен ветеринар.</text>
+  <rect x="112" y="474" width="456" height="42" rx="10" fill="#fff8df" stroke="#d9c88f"/>
+  <text x="132" y="501" fill="#7a5a08" font-family="Arial, sans-serif" font-size="17">AI не заменяет ветеринара, но помогает быстро оценить ситуацию</text>
+  <rect x="112" y="548" width="206" height="54" rx="10" fill="#3b6d11"/>
+  <text x="145" y="582" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="700">Попробовать бесплатно</text>
+  <rect x="334" y="548" width="184" height="54" rx="10" fill="#ffffff" stroke="#cddbc4"/>
+  <text x="366" y="582" fill="#26351e" font-family="Arial, sans-serif" font-size="18" font-weight="700">Как это работает</text>
+  <rect x="820" y="176" width="300" height="360" rx="16" fill="#eef7e7" stroke="#dfe8d6"/>
+  <circle cx="970" cy="296" r="88" fill="#d8ebc8"/>
+  <rect x="898" y="276" width="144" height="96" rx="48" fill="#ffffff" stroke="#a9c893"/>
+  <circle cx="942" cy="320" r="12" fill="#3b6d11"/>
+  <circle cx="1000" cy="320" r="12" fill="#3b6d11"/>
+  <path d="M928 238c20-28 60-28 84 0" fill="none" stroke="#3b6d11" stroke-width="12" stroke-linecap="round"/>
+  <rect x="866" y="426" width="208" height="44" rx="10" fill="#ffffff"/>
+  <text x="894" y="454" fill="#3b6d11" font-family="Arial, sans-serif" font-size="18" font-weight="700">AI анализ симптомов</text>
+</svg>
