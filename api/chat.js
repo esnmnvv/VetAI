@@ -1,5 +1,7 @@
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
+const MAX_CONTEXT_MESSAGES = 6;
+const MAX_COMPLETION_TOKENS = 650;
 
 const SYSTEM_PROMPTS = {
   ru: `Ты опытный ветеринар в Кыргызстане.
@@ -106,13 +108,13 @@ export default async function handler(request) {
     body: JSON.stringify({
       model: MODEL,
       temperature: 0.3,
-      max_completion_tokens: 1000,
+      max_completion_tokens: MAX_COMPLETION_TOKENS,
       messages: [
         {
           role: 'system',
           content: SYSTEM_PROMPTS[language],
         },
-        ...payload.messages,
+        ...payload.messages.slice(-MAX_CONTEXT_MESSAGES),
       ],
     }),
   });

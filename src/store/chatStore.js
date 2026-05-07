@@ -6,6 +6,7 @@ import { detectUrgency } from '../utils/urgency.js';
 
 const CHAT_SESSIONS_KEY = 'vetai-chat-sessions';
 const LANGUAGE_KEY = 'vetai-language';
+const MAX_CONTEXT_MESSAGES = 6;
 
 const createWelcomeMessage = (language) => ({
   id: 'welcome',
@@ -61,6 +62,8 @@ const getAnimalLabel = (value, language) =>
   localize(animals.find((animal) => animal.value === value)?.label, language) || value;
 
 const initialLanguage = readStoredLanguage();
+
+const trimContextMessages = (messages) => messages.slice(-MAX_CONTEXT_MESSAGES);
 
 export const useChatStore = create((set, get) => ({
   language: initialLanguage,
@@ -237,7 +240,7 @@ ${userText}`;
         : textContent;
 
       const nextApiMessages = [
-        ...apiMessages,
+        ...trimContextMessages(apiMessages),
         {
           role: 'user',
           content,
@@ -257,14 +260,14 @@ ${userText}`;
       };
 
       set((state) => ({
-        apiMessages: [
+        apiMessages: trimContextMessages([
           ...apiMessages,
           {
             role: 'user',
             content: textContent,
           },
           assistantApiMessage,
-        ],
+        ]),
         messages: [...state.messages, assistantMessage],
       }));
 
