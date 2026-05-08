@@ -439,10 +439,8 @@ textarea {
   border-radius: var(--border-radius-md);
   padding: 10px;
   font-size: 12px;
-  display: grid;
-  grid-template-columns: 34px 1fr;
+  display: flex;
   align-items: center;
-  gap: 9px;
   min-height: 64px;
   color: var(--color-text-primary);
   cursor: pointer;
@@ -461,36 +459,6 @@ textarea {
 
 .disease-tag.active {
   transform: translateY(-1px);
-}
-
-.disease-icon {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: #eaf3de;
-  color: #3b6d11;
-  font-size: 18px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.disease-icon.large {
-  width: 38px;
-  height: 38px;
-}
-
-.disease-icon.specialist,
-.disease-tag.specialist .disease-icon {
-  background: #fff0ce;
-  color: #9a6409;
-}
-
-.disease-icon.emergency,
-.disease-tag.emergency .disease-icon {
-  background: #fff0ee;
-  color: #b3261e;
 }
 
 .disease-tag-content {

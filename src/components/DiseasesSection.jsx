@@ -18,7 +18,6 @@ export default function DiseasesSection() {
             type="button"
             onClick={() => setActiveDisease(disease)}
           >
-            <span className="disease-icon">{disease.icon}</span>
             <span className="disease-tag-content">
               <strong>{localize(disease.name, language)}</strong>
               <span className={`disease-severity ${disease.severity || 'low'}`}>
@@ -31,9 +30,6 @@ export default function DiseasesSection() {
       </div>
       <article className="disease-details">
         <div className="disease-details-head">
-          <span className={`disease-icon large ${activeDisease.severity || 'low'}`}>
-            {activeDisease.icon}
-          </span>
           <h3>{localize(activeDisease.name, language)}</h3>
           <span className={`disease-severity ${activeDisease.severity || 'low'}`}>
             <span className="severity-dot" aria-hidden="true" />
