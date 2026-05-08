@@ -275,7 +275,7 @@ textarea {
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   max-width: var(--content-width);
-  margin: 0 auto;
+  margin: 1.25rem auto 0;
   background: var(--color-border-tertiary);
   border-top: 0.5px solid var(--color-border-tertiary);
   border-bottom: 0.5px solid var(--color-border-tertiary);
