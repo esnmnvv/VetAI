@@ -4,6 +4,7 @@ import Footer from './components/Footer.jsx';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
 import HowItWorks from './components/HowItWorks.jsx';
+import ImpactSection from './components/ImpactSection.jsx';
 import Stats from './components/Stats.jsx';
 
 export default function App() {
@@ -12,6 +13,7 @@ export default function App() {
       <Header />
       <Hero />
       <Stats />
+      <ImpactSection />
       <HowItWorks />
       <DiseasesSection />
       <DemoChat />

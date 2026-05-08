@@ -1,8 +1,10 @@
 import { useChatStore } from '../../store/chatStore.js';
+import { useI18n } from '../../i18n/useI18n.js';
 import ChatMessage from './ChatMessage.jsx';
 import LoadingDots from './LoadingDots.jsx';
 
 export default function ChatHistory({ onFindVet }) {
+  const { t } = useI18n();
   const messages = useChatStore((state) => state.messages);
   const isLoading = useChatStore((state) => state.isLoading);
 
@@ -14,8 +16,10 @@ export default function ChatHistory({ onFindVet }) {
 
       {isLoading && (
         <div className="chat-row assistant">
+          <div className="chat-avatar" aria-hidden="true">AI</div>
           <div className="chat-bubble assistant loading-bubble">
             <LoadingDots />
+            <span>{t.loading}</span>
           </div>
         </div>
       )}

@@ -13,20 +13,32 @@ export default function DiseasesSection() {
       <div className="diseases">
         {diseases.map((disease) => (
           <button
-            className={`disease-tag ${localize(activeDisease.name, 'ru') === localize(disease.name, 'ru') ? 'active' : ''}`}
+            className={`disease-tag ${disease.severity || 'low'} ${localize(activeDisease.name, 'ru') === localize(disease.name, 'ru') ? 'active' : ''}`}
             key={localize(disease.name, 'ru')}
             type="button"
             onClick={() => setActiveDisease(disease)}
           >
-            <span className="disease-dot" style={{ background: disease.color }} />
-            {localize(disease.name, language)}
+            <span className="disease-icon">{disease.icon}</span>
+            <span className="disease-tag-content">
+              <strong>{localize(disease.name, language)}</strong>
+              <span className={`disease-severity ${disease.severity || 'low'}`}>
+                <span className="severity-dot" aria-hidden="true" />
+                {t.diseaseSeverity[disease.severity || 'low']}
+              </span>
+            </span>
           </button>
         ))}
       </div>
       <article className="disease-details">
         <div className="disease-details-head">
-          <span className="disease-dot" style={{ background: activeDisease.color }} />
+          <span className={`disease-icon large ${activeDisease.severity || 'low'}`}>
+            {activeDisease.icon}
+          </span>
           <h3>{localize(activeDisease.name, language)}</h3>
+          <span className={`disease-severity ${activeDisease.severity || 'low'}`}>
+            <span className="severity-dot" aria-hidden="true" />
+            {t.diseaseSeverity[activeDisease.severity || 'low']}
+          </span>
         </div>
         <p>{localize(activeDisease.description, language)}</p>
         <div className="disease-detail-grid">
