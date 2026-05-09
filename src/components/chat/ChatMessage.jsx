@@ -12,8 +12,14 @@ const getDiagnosisPreview = (text) => text.split('\n').find(Boolean)?.replace(/^
 export default function ChatMessage({ message, onFindVet }) {
   const { t } = useI18n();
   const isUser = message.role === 'user';
-  const urgency = !isUser && !message.isError ? message.urgency || detectUrgency(message.text) : '';
-  const diagnosisPreview = !isUser && !message.isError ? getDiagnosisPreview(message.text) : '';
+  const isWelcome = message.id === 'welcome';
+  const messageText = isWelcome ? t.welcome : message.text;
+  const urgency = !isUser && !message.isError && !isWelcome
+    ? message.urgency || detectUrgency(messageText)
+    : '';
+  const diagnosisPreview = !isUser && !message.isError && !isWelcome
+    ? getDiagnosisPreview(messageText)
+    : '';
 
   return (
     <div className={`chat-row ${isUser ? 'user' : 'assistant'}`}>
@@ -32,7 +38,7 @@ export default function ChatMessage({ message, onFindVet }) {
             <span>{t.urgencyLabel}: {t.urgency[urgency]}</span>
           </div>
         )}
-        <div className="chat-text">{message.text}</div>
+        <div className="chat-text">{messageText}</div>
         {diagnosisPreview && (
           <div className={`analysis-card ${urgency || 'low'}`}>
             <div className="analysis-card-title">{t.resultCardTitle}</div>

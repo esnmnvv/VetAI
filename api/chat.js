@@ -119,12 +119,22 @@ export default async function handler(request) {
     }),
   });
 
-  const data = await response.json();
+  const rawBody = await response.text();
+  let data = {};
+  let hasJsonBody = false;
+
+  try {
+    data = rawBody ? JSON.parse(rawBody) : {};
+    hasJsonBody = Boolean(rawBody);
+  } catch {
+    data = {};
+  }
+
   const messages = RESPONSE_MESSAGES[language];
 
   if (!response.ok) {
     return jsonResponse(
-      { error: data.error?.message || messages.aiRequestError },
+      { error: data.error?.message || (hasJsonBody ? rawBody : '') || messages.aiRequestError },
       { status: response.status },
     );
   }

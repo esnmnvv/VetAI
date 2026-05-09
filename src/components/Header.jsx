@@ -8,7 +8,7 @@ export default function Header() {
   return (
     <nav className="nav">
       <div className="logo">
-        МалАИ <span>{t.brandTagline}</span>
+        VetAI <span>{t.brandTagline}</span>
       </div>
       <div className="nav-actions">
         <div className="language-switch" aria-label="Language">

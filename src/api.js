@@ -18,18 +18,51 @@ export async function askGroq(messages, language = 'ru') {
 
   const rawBody = await response.text();
   let data = {};
+  let hasJsonBody = false;
 
   try {
     data = rawBody ? JSON.parse(rawBody) : {};
+    hasJsonBody = Boolean(rawBody);
   } catch {
     data = {};
   }
 
   if (!response.ok) {
-    throw new Error(data.error || rawBody || t.aiRequestError);
+    throw new Error(data.error || (hasJsonBody ? rawBody : '') || t.aiRequestError);
   }
 
   return data.content || t.aiNoText;
+}
+
+export async function translateMessages(messages, language = 'ru') {
+  const t = getTranslation(language);
+  const response = await fetch('/api/translate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      language,
+      messages,
+    }),
+  });
+
+  const rawBody = await response.text();
+  let data = {};
+  let hasJsonBody = false;
+
+  try {
+    data = rawBody ? JSON.parse(rawBody) : {};
+    hasJsonBody = Boolean(rawBody);
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok) {
+    throw new Error(data.error || (hasJsonBody ? rawBody : '') || t.aiRequestError);
+  }
+
+  return Array.isArray(data.translations) ? data.translations : messages;
 }
 
 export function imageFileToDataUrl(file, language = 'ru') {

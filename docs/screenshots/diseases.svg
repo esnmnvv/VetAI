@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
-  <title id="title">База болезней МалАИ</title>
+  <title id="title">База болезней VetAI</title>
   <desc id="desc">Экран базы болезней с симптомами и профилактикой.</desc>
   <rect width="1280" height="720" fill="#f7faf4"/>
   <rect x="74" y="50" width="1132" height="620" rx="18" fill="#ffffff" stroke="#dfe8d6"/>

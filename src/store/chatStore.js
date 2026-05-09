@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { askGroq, imageFileToDataUrl } from '../api.js';
+import { askGroq, imageFileToDataUrl, translateMessages } from '../api.js';
 import { animals, localize } from '../data/siteData.js';
 import { DEFAULT_LANGUAGE, getTranslation } from '../i18n/translations.js';
 import { detectUrgency } from '../utils/urgency.js';
@@ -13,6 +13,40 @@ const createWelcomeMessage = (language) => ({
   role: 'assistant',
   text: getTranslation(language).welcome,
 });
+
+const normalizeMessagesForLanguage = (messages, language) =>
+  messages.map((message) => (message.id === 'welcome' ? createWelcomeMessage(language) : message));
+
+const getSessionLanguage = (session) => (session.language === 'ky' ? 'ky' : 'ru');
+
+const getCachedMessages = (session, language) => {
+  const cachedMessages = session.translations?.[language]?.messages;
+  return Array.isArray(cachedMessages) ? cachedMessages : null;
+};
+
+const translateSessionMessages = async (messages, language) => {
+  const translatedTexts = await translateMessages(
+    messages.filter((message) => message.id !== 'welcome').map((message) => message.text || ''),
+    language,
+  );
+  let translationIndex = 0;
+
+  return messages.map((message) => {
+    if (message.id === 'welcome') return createWelcomeMessage(language);
+
+    const translatedText = translatedTexts[translationIndex] || message.text;
+    translationIndex += 1;
+
+    return {
+      ...message,
+      text: translatedText,
+      urgency: message.role === 'assistant' && !message.isError ? detectUrgency(translatedText) : message.urgency,
+      showVetFinder: message.role === 'assistant'
+        ? getTranslation(language).vetPattern.test(translatedText)
+        : message.showVetFinder,
+    };
+  });
+};
 
 const readStoredLanguage = () => {
   try {
@@ -85,9 +119,27 @@ export const useChatStore = create((set, get) => ({
     set((state) => {
       const hasOnlyWelcome = state.messages.length === 1 && state.messages[0]?.id === 'welcome';
 
+      if (!hasOnlyWelcome) {
+        if (state.photoPreview) URL.revokeObjectURL(state.photoPreview);
+
+        return {
+          language: nextLanguage,
+          selectedAnimal: getTranslation(nextLanguage).defaultAnimal,
+          symptoms: '',
+          messages: [createWelcomeMessage(nextLanguage)],
+          apiMessages: [],
+          activeSessionId: null,
+          photo: null,
+          photoPreview: '',
+          isDragging: false,
+          isLoading: false,
+        };
+      }
+
       return {
         language: nextLanguage,
-        messages: hasOnlyWelcome ? [createWelcomeMessage(nextLanguage)] : state.messages,
+        selectedAnimal: getTranslation(nextLanguage).defaultAnimal,
+        messages: [createWelcomeMessage(nextLanguage)],
       };
     });
   },
@@ -114,23 +166,69 @@ export const useChatStore = create((set, get) => ({
     });
   },
 
-  loadSession: (sessionId) => {
+  loadSession: async (sessionId) => {
     const session = get().sessions.find((item) => item.id === sessionId);
     if (!session) return;
 
     const { photoPreview } = get();
     if (photoPreview) URL.revokeObjectURL(photoPreview);
 
+    const targetLanguage = get().language;
+    const sessionLanguage = getSessionLanguage(session);
+    const sourceMessages = session.messages?.length
+      ? normalizeMessagesForLanguage(session.messages, targetLanguage)
+      : [createWelcomeMessage(targetLanguage)];
+    const cachedMessages = getCachedMessages(session, targetLanguage);
+    const shouldTranslate = sessionLanguage !== targetLanguage && !cachedMessages;
+
     set({
-      selectedAnimal: session.selectedAnimal || getTranslation(get().language).defaultAnimal,
+      selectedAnimal: session.selectedAnimal || getTranslation(targetLanguage).defaultAnimal,
       symptoms: '',
-      messages: session.messages?.length ? session.messages : [createWelcomeMessage(get().language)],
-      apiMessages: session.apiMessages || [],
+      messages: cachedMessages || sourceMessages,
+      apiMessages: sessionLanguage === targetLanguage ? session.apiMessages || [] : [],
       activeSessionId: session.id,
       photo: null,
       photoPreview: '',
       isDragging: false,
+      isLoading: shouldTranslate,
     });
+
+    if (!shouldTranslate) return;
+
+    try {
+      const translatedMessages = await translateSessionMessages(session.messages || [], targetLanguage);
+      const current = get();
+      const nextSessions = current.sessions.map((item) =>
+        item.id === session.id
+          ? {
+              ...item,
+              translations: {
+                ...(item.translations || {}),
+                [targetLanguage]: {
+                  messages: translatedMessages,
+                },
+              },
+            }
+          : item,
+      );
+
+      writeStoredSessions(nextSessions);
+
+      set((state) => ({
+        sessions: nextSessions,
+        messages: state.activeSessionId === session.id ? translatedMessages : state.messages,
+      }));
+    } catch {
+      set((state) => ({
+        messages: state.activeSessionId === session.id
+          ? normalizeMessagesForLanguage(session.messages || [], targetLanguage)
+          : state.messages,
+      }));
+    } finally {
+      if (get().activeSessionId === session.id) {
+        set({ isLoading: false });
+      }
+    }
   },
 
   deleteSession: (sessionId) => {
